@@ -13,8 +13,9 @@ const app = express();
 // ================= MIDDLEWARE =================
 app.use(express.json());
 // app.use(cors());
+// app.use(cors());
 app.use(cors({
-  origin: "https://e-comfrontend.vercel.app/",
+  origin: "https://e-comfrontend.vercel.app",
   credentials: true
 }));
 
