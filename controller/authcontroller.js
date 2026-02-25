@@ -2,6 +2,7 @@
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import User from "../model/Auth.js";
+import dbConnect from "../lib/dbConnect.js";
 
 
 // ================= TOKEN FUNCTION =================
@@ -18,6 +19,7 @@ const generateToken = (id, role) => {
 export const registerUser = async (req, res) => {
   try {
     const { name, email, password } = req.body;
+    await dbConnect(); // 🔥 THIS IS CRITICAL
 
     // Check user exists
     const userExists = await User.findOne({ email });
@@ -31,6 +33,7 @@ export const registerUser = async (req, res) => {
     // Hash password manually
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(password, salt);
+    await dbConnect(); // 🔥 THIS IS CRITICAL
 
     // Create user
     const user = await User.create({
@@ -67,6 +70,7 @@ export const registerUser = async (req, res) => {
 export const loginUser = async (req, res) => {
   try {
     const { email, password } = req.body;
+    await dbConnect(); // 🔥 THIS IS CRITICAL
 
     // Get user with password
     const user = await User.findOne({ email }).select("+password");
@@ -133,7 +137,8 @@ export const logoutUser = async (req, res) => {
 };
 export const getalluser = async (req, res) => {
     console.log("Runingsss");
-    
+        await dbConnect(); s// 🔥 THIS IS CRITICAL
+
     const result=await User.find()
   res.status(200).json({
     success: true,

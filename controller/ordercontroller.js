@@ -1,6 +1,7 @@
 // controllers/orderController.js
 
 import Order from "../model/Order.js";
+import dbConnect from "../lib/dbConnect.js";
 
 // 🔹 Create a new order
 export const createOrder = async (req, res) => {
@@ -10,6 +11,7 @@ export const createOrder = async (req, res) => {
     if (!orderItems || orderItems.length === 0) {
       return res.status(400).json({ message: "No order items provided" });
     }
+    await dbConnect(); // 🔥 THIS IS CRITICAL
 
     const order = new Order({
       user: req.user._id, // assuming you have auth middleware
@@ -35,6 +37,8 @@ export const createOrder = async (req, res) => {
 // 🔹 Get all orders of a user
 export const getUserOrders = async (req, res) => {
   try {
+        await dbConnect(); // 🔥 THIS IS CRITICAL
+
     const orders = await Order.find({ user: req.user._id }).populate(
       "orderItems.product",
       "name price images"
@@ -50,6 +54,8 @@ export const getUserOrders = async (req, res) => {
 // 🔹 Get all orders (admin)
 export const getAllOrders = async (req, res) => {
   try {
+        await dbConnect(); // 🔥 THIS IS CRITICAL
+
     const orders = await Order.find().populate("user", "name email");
 
     res.status(200).json({ success: true, orders });

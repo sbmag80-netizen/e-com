@@ -1,9 +1,12 @@
 import asyncHandler from "express-async-handler";
 import Product from "../model/Product.js";
+import dbConnect from "../lib/dbConnect.js";
 
 
 // ================= CREATE PRODUCT =================
 export const createProduct = asyncHandler(async (req, res) => {
+      await dbConnect(); // 🔥 THIS IS CRITICAL
+
   const product = await Product.create(req.body);
 
   res.status(201).json({
@@ -16,6 +19,8 @@ export const createProduct = asyncHandler(async (req, res) => {
 
 // ================= GET ALL PRODUCTS =================
 export const getAllProducts = asyncHandler(async (req, res) => {
+      await dbConnect(); // 🔥 THIS IS CRITICAL
+
   const products = await Product.find();
 console.log("FRRR");
 
@@ -29,6 +34,8 @@ console.log("FRRR");
 
 // ================= GET SINGLE PRODUCT =================
 export const getSingleProduct = asyncHandler(async (req, res) => {
+      await dbConnect(); // 🔥 THIS IS CRITICAL
+
   const product = await Product.findById(req.params.id);
 
   if (!product) {
@@ -45,6 +52,8 @@ export const getSingleProduct = asyncHandler(async (req, res) => {
 
 // ================= UPDATE PRODUCT =================
 export const updateProduct = asyncHandler(async (req, res) => {
+      await dbConnects(); // 🔥 THIS IS CRITICAL
+
   const product = await Product.findById(req.params.id);
 
   if (!product) {
@@ -74,6 +83,7 @@ export const deleteProduct = asyncHandler(async (req, res) => {
     res.status(404);
     throw new Error("Product not found");
   }
+    await dbConnect(); // 🔥 THIS IS CRITICAL
 
   await product.deleteOne();
 
