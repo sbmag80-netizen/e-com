@@ -83,7 +83,7 @@ export const deleteProduct = asyncHandler(async (req, res) => {
     res.status(404);
     throw new Error("Product not found");
   }
-    await dbConnect(); // 🔥 THIS IS CRITICAL
+    await dbConnect(); // 🔥 THIS
 
   await product.deleteOne();
 
