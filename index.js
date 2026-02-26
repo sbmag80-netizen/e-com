@@ -16,9 +16,12 @@ app.use(express.json());
 // app.use(cors());
 app.use(cors({
   origin: "https://e-comfrontend.vercel.app",
-  credentials: true
+  credentials: true,
+  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+  allowedHeaders: ["Content-Type", "Authorization"]
 }));
 
+app.options("*", cors());
 // ================= ROUTES =================
 app.use("/api/products", router);
 app.use("/api/auth", authrouter);
