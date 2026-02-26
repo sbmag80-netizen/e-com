@@ -102,17 +102,28 @@
 import express from "express";
 import serverless from "serverless-http";
 import cors from "cors";
+import path from "path";
+import { fileURLToPath } from "url";
+
 import dbConnect from "./lib/dbConnect.js";
+import productRoutes from "./routes/productRoutes.js";
+import authRoutes from "./routes/authRoutes.js";
+import orderRoutes from "./routes/orderRoutes.js";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const app = express();
 
+/* ---------- Middleware ---------- */
 app.use(express.json());
+
 app.use(cors({
   origin: "https://e-comfrontend.vercel.app",
   credentials: true,
 }));
 
-// 🔥 CRITICAL: connect DB before routes
+/* ---------- DB Connection ---------- */
 app.use(async (req, res, next) => {
   try {
     await dbConnect();
@@ -122,15 +133,24 @@ app.use(async (req, res, next) => {
   }
 });
 
-// routes AFTER DB is ready
+/* ---------- API Routes ---------- */
 app.use("/api/products", productRoutes);
 app.use("/api/auth", authRoutes);
 app.use("/api/order", orderRoutes);
 
-// error handler
+/* ---------- Serve Frontend ---------- */
+app.use(express.static(path.join(__dirname, "dist")));
+
+/* SPA fallback (VERY IMPORTANT) */
+app.get("*", (req, res) => {
+  res.sendFile(path.join(__dirname, "dist", "index.html"));
+});
+
+/* ---------- Error Handler ---------- */
 app.use((err, req, res, next) => {
   console.error("SERVER ERROR:", err);
   res.status(500).json({ error: err.message });
 });
 
+/* ---------- Export for Render ---------- */
 export const handler = serverless(app);
