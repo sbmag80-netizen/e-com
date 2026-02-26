@@ -52,7 +52,7 @@ export const getSingleProduct = asyncHandler(async (req, res) => {
 
 // ================= UPDATE PRODUCT =================
 export const updateProduct = asyncHandler(async (req, res) => {
-      await dbConnects(); // 🔥 THIS IS CRITICAL
+      await dbConnect(); // 🔥 THIS IS CRITICAL
 
   const product = await Product.findById(req.params.id);
 
@@ -77,6 +77,7 @@ export const updateProduct = asyncHandler(async (req, res) => {
 
 // ================= DELETE PRODUCT =================
 export const deleteProduct = asyncHandler(async (req, res) => {
+   await dbConnect();
   const product = await Product.findById(req.params.id);
 
   if (!product) {
